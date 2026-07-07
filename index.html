@@ -32,10 +32,10 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow: hidden; /* Prevent body scrollbars */
+            overflow-x: hidden;
         }
 
-        /* Mobile View Enforcer - Removed explicit scrollbar */
+        /* Mobile View Enforcer */
         .app-container {
             width: 100%;
             max-width: 412px;
@@ -44,7 +44,7 @@
             background-color: var(--bg-light);
             position: relative;
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            overflow: hidden; /* Hides internal container scrollbars */
+            overflow-y: auto;
             display: flex;
             flex-direction: column;
         }
@@ -56,14 +56,6 @@
             width: 100%;
             height: 100%;
             animation: fadeIn var(--transition-speed) ease-in-out forwards;
-            overflow-y: auto; /* Enable safe scrolling internally if screen overflows, without generic scroller bars */
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
-        }
-
-        /* Hide scrollbar for Chrome, Safari and Opera */
-        .screen::-webkit-scrollbar {
-            display: none;
         }
 
         .screen.active {
@@ -86,7 +78,6 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            flex-shrink: 0;
         }
 
         .nav-left {
@@ -142,7 +133,7 @@
         }
 
         @keyframes pulse {
-            0 { transform: scale(1); }
+            0% { transform: scale(1); }
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
@@ -226,7 +217,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100%;
         }
 
         .ad-banner {
@@ -248,7 +238,7 @@
             backdrop-filter: blur(5px);
         }
 
-        /* Packages Layout */
+        /* Packages Layout (Match requested Mockup style) */
         .section-title {
             font-size: 1.1rem;
             color: var(--text-dark);
@@ -294,7 +284,6 @@
             background: white;
             border-radius: 12px;
             padding: 15px;
-            margin-bottom: 20px;
         }
 
         .sub-card {
@@ -326,6 +315,10 @@
             border-radius: 6px;
             font-weight: 600;
             cursor: pointer;
+        }
+
+        .sub-action-btn.active-pkg {
+            background-color: var(--primary-yellow);
         }
 
         /* bKash Dummy UI Gate */
@@ -366,7 +359,6 @@
             height: 100%;
             text-align: center;
             padding: 40px;
-            margin-auto: auto;
         }
 
         .success-icon {
@@ -521,7 +513,7 @@
         </div>
 
         <div id="screen-connected" class="screen">
-            <div class="content" style="justify-content: space-between;">
+            <div class="content">
                 <div class="success-state">
                     <div class="success-icon">✓</div>
                     <h2 style="color: var(--bg-dark); font-weight: 700; margin-bottom: 8px;">You are connected!</h2>
@@ -537,12 +529,14 @@
         let selectedPackageData = null;
 
         function navigateTo(screenId) {
+            // Target all screen states inside core element
             document.querySelectorAll('.screen').forEach(screen => {
                 screen.classList.remove('active');
             });
             document.getElementById(screenId).classList.add('active');
         }
 
+        // Logic sequence for path 1: Free Connection Ad timer
         function handleFreeWifi() {
             navigateTo('screen-ad');
             let timeLeft = 5;
@@ -554,11 +548,13 @@
                 if (timeLeft <= 0) {
                     clearInterval(countdown);
                     navigateTo('screen-connected');
+                    // Reset text timer indicator placeholder for eventual re-runs
                     timerElement.innerText = '5s';
                 }
             }, 1000);
         }
 
+        // Logic sequence for path 2: Dynamic Subscription Package triggers
         function selectPackage(name, price) {
             selectedPackageData = { name, price };
             document.getElementById('bkash-amount-label').innerText = `Amount: ${price} Taka`;
@@ -570,6 +566,7 @@
 
             const container = document.getElementById('subscription-container');
             
+            // Build requested element object based closely on sample mockup UI rules safely
             container.innerHTML = `
                 <div class="sub-card">
                     <div class="sub-details">
@@ -584,6 +581,7 @@
         }
 
         function resetPortal() {
+            // Clean active cache configuration arrays back to dynamic baseline
             selectedPackageData = null;
             document.getElementById('subscription-container').innerHTML = `
                 <p style="color: var(--text-muted); font-size: 0.9rem; text-align: center; padding: 10px 0;">No packages purchased yet.</p>
