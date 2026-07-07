@@ -32,7 +32,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow-x: hidden;
+            overflow: hidden; /* Prevent body scrollbars */
         }
 
         /* Mobile View Enforcer */
@@ -44,7 +44,7 @@
             background-color: var(--bg-light);
             position: relative;
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            overflow-y: auto;
+            overflow: hidden; 
             display: flex;
             flex-direction: column;
         }
@@ -56,6 +56,14 @@
             width: 100%;
             height: 100%;
             animation: fadeIn var(--transition-speed) ease-in-out forwards;
+            overflow-y: auto; 
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .screen::-webkit-scrollbar {
+            display: none;
         }
 
         .screen.active {
@@ -78,6 +86,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            flex-shrink: 0;
         }
 
         .nav-left {
@@ -129,6 +138,7 @@
             width: 100px;
             height: 100px;
             margin-bottom: 20px;
+            object-fit: contain;
             animation: pulse 2s infinite;
         }
 
@@ -217,6 +227,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            height: 100%;
         }
 
         .ad-banner {
@@ -238,7 +249,7 @@
             backdrop-filter: blur(5px);
         }
 
-        /* Packages Layout (Match requested Mockup style) */
+        /* Packages Layout */
         .section-title {
             font-size: 1.1rem;
             color: var(--text-dark);
@@ -284,6 +295,7 @@
             background: white;
             border-radius: 12px;
             padding: 15px;
+            margin-bottom: 20px;
         }
 
         .sub-card {
@@ -315,10 +327,6 @@
             border-radius: 6px;
             font-weight: 600;
             cursor: pointer;
-        }
-
-        .sub-action-btn.active-pkg {
-            background-color: var(--primary-yellow);
         }
 
         /* bKash Dummy UI Gate */
@@ -359,6 +367,7 @@
             height: 100%;
             text-align: center;
             padding: 40px;
+            margin: auto 0;
         }
 
         .success-icon {
@@ -383,13 +392,7 @@
         <div id="screen-welcome" class="screen active">
             <div class="content" style="justify-content: center;">
                 <div class="hero-section">
-                    <svg class="hero-logo" viewBox="0 0 326 376">
-                        <polygon points="163,0 326,94 326,282 163,376 0,282 0,94" fill="#00332c"/>
-                        <path d="M65 145 L163 88 L261 145 L261 175 L163 118 L65 175 Z" fill="#ffe100"/>
-                        <path d="M65 200 L163 143 L261 200 L261 230 L163 173 L65 230 Z" fill="#ffe100"/>
-                        <path d="M65 255 L163 198 L261 255 L261 285 L163 228 L65 285 Z" fill="#ffe100"/>
-                        <polygon points="163,260 188,285 163,310 138,285" fill="#ffe100"/>
-                    </svg>
+                    <img src="BHive-Logo10-07.png" alt="BTCL Logo" class="hero-logo" onerror="this.src='https://via.placeholder.com/100?text=Logo'">
                     <h1>Welcome to<br>BTCL Wifi Hotspot Zone</h1>
                     <p class="subtitle">Select your preference to look for internet access</p>
                 </div>
@@ -410,7 +413,7 @@
         <div id="screen-login" class="screen">
             <div class="navbar">
                 <div class="nav-left">
-                    <svg class="nav-logo" viewBox="0 0 326 376"><polygon points="163,0 326,94 326,282 163,376 0,282 0,94" fill="#ffe100"/></svg>
+                    <img src="BHive-Logo10-07.png" alt="Logo" class="nav-logo" onerror="this.src='https://via.placeholder.com/32?text=Logo'">
                     <span class="nav-title">BTCL Hotspot Portal</span>
                 </div>
             </div>
@@ -429,7 +432,7 @@
         <div id="screen-otp" class="screen">
             <div class="navbar">
                 <div class="nav-left">
-                    <svg class="nav-logo" viewBox="0 0 326 376"><polygon points="163,0 326,94 326,282 163,376 0,282 0,94" fill="#ffe100"/></svg>
+                    <img src="BHive-Logo10-07.png" alt="Logo" class="nav-logo" onerror="this.src='https://via.placeholder.com/32?text=Logo'">
                     <span class="nav-title">OTP Verification</span>
                 </div>
             </div>
@@ -448,11 +451,7 @@
         <div id="screen-dashboard" class="screen">
             <div class="navbar">
                 <div class="nav-left">
-                    <svg class="nav-logo" viewBox="0 0 326 376">
-                        <polygon points="163,0 326,94 326,282 163,376 0,282 0,94" fill="#ffe100"/>
-                        <path d="M65 145 L163 88 L261 145 L261 175 L163 118 L65 175 Z" fill="#00332c"/>
-                        <path d="M65 200 L163 143 L261 200 L261 230 L163 173 L65 230 Z" fill="#00332c"/>
-                    </svg>
+                    <img src="BHive-Logo10-07.png" alt="Logo" class="nav-logo" onerror="this.src='https://via.placeholder.com/32?text=Logo'">
                     <span class="nav-title">BTCL Wifi Hotspot</span>
                 </div>
                 <div class="hamburger">
@@ -513,7 +512,7 @@
         </div>
 
         <div id="screen-connected" class="screen">
-            <div class="content">
+            <div class="content" style="justify-content: space-between;">
                 <div class="success-state">
                     <div class="success-icon">✓</div>
                     <h2 style="color: var(--bg-dark); font-weight: 700; margin-bottom: 8px;">You are connected!</h2>
@@ -529,14 +528,12 @@
         let selectedPackageData = null;
 
         function navigateTo(screenId) {
-            // Target all screen states inside core element
             document.querySelectorAll('.screen').forEach(screen => {
                 screen.classList.remove('active');
             });
             document.getElementById(screenId).classList.add('active');
         }
 
-        // Logic sequence for path 1: Free Connection Ad timer
         function handleFreeWifi() {
             navigateTo('screen-ad');
             let timeLeft = 5;
@@ -548,13 +545,11 @@
                 if (timeLeft <= 0) {
                     clearInterval(countdown);
                     navigateTo('screen-connected');
-                    // Reset text timer indicator placeholder for eventual re-runs
                     timerElement.innerText = '5s';
                 }
             }, 1000);
         }
 
-        // Logic sequence for path 2: Dynamic Subscription Package triggers
         function selectPackage(name, price) {
             selectedPackageData = { name, price };
             document.getElementById('bkash-amount-label').innerText = `Amount: ${price} Taka`;
@@ -566,7 +561,6 @@
 
             const container = document.getElementById('subscription-container');
             
-            // Build requested element object based closely on sample mockup UI rules safely
             container.innerHTML = `
                 <div class="sub-card">
                     <div class="sub-details">
@@ -581,7 +575,6 @@
         }
 
         function resetPortal() {
-            // Clean active cache configuration arrays back to dynamic baseline
             selectedPackageData = null;
             document.getElementById('subscription-container').innerHTML = `
                 <p style="color: var(--text-muted); font-size: 0.9rem; text-align: center; padding: 10px 0;">No packages purchased yet.</p>
